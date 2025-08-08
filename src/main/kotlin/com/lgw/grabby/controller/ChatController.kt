@@ -47,7 +47,6 @@ class ChatController(
         @RequestBody request: ChatRequestDto
     ): ResponseEntity<ApiResponseDto<Map<String, Any>>> {
         logger.info { "Chat API 요청 받음: model=${request.model}" }
-
         // 유효성 검사
         if (request.query.isBlank()) {
             logger.warn { "빈 질의가 요청됨" }
@@ -60,13 +59,25 @@ class ChatController(
             // 시스템 프롬프트 지정
             val systemMessage = "You are a helpful AI assistant."
 
-            // AI 응답 생성
+            /**
+             *  모델별 인스턴스가 달라, 비즈니스 레이어에서의 모델별 분기가 되어 있어
+             *  Controller에서도 해당 모델을 체크하여 로직을 분기한다.
+             *  TODO : 추후 해당 로직을 조금 더 간결하고, side effect가 없도록 개선할 필요가 있다.
+             */
             val response = request.model?.let {
-                chatService.openAiChat(
-                    userInput = request.query,
-                    systemMessage = systemMessage,
-                    model = it
-                )
+                if (it.contains("claude", ignoreCase = true)) {
+                    chatService.anthropicAiChat(
+                        userInput = request.query,
+                        systemMessage = systemMessage,
+                        model = it
+                    )
+                } else {
+                    chatService.openAiChat(
+                        userInput = request.query,
+                        systemMessage = systemMessage,
+                        model = it
+                    )
+                }
             }
             logger.debug { "LLM 응답 생성: $response" }
 

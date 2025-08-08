@@ -8,9 +8,11 @@ object AiModel {
     const val LLM_MATH = "llm-math"
     const val LLM_CODE_INTERPRETER = "llm-code-interpreter"
     const val LLM_DALL_E = "llm-dall-e"
-    const val CLAUDE_V1 = "claude-v1"
+    const val CLAUDE_V3_HAIKU = "claude-3-haiku-20240307"
+    const val CLAUDE_V3_SONNET = "claude-3-sonnet-20240229"
+    const val CLAUDE_V3_OPUS = "claude-3-opus-20240229"
 
-    private val models = listOf(
+    private val gptModels = listOf(
         GPT_3_5_TURBO,
         GPT_4,
         GPT_4_TURBO,
@@ -18,10 +20,12 @@ object AiModel {
         LLM_MATH,
         LLM_CODE_INTERPRETER,
         LLM_DALL_E,
-        CLAUDE_V1
     )
 
-    fun fromString(model: String): String? {
-        return models.find { it.equals(model, ignoreCase = true) }
-    }
+    private val anthropicModels = listOf(
+        CLAUDE_V3_HAIKU,
+        CLAUDE_V3_SONNET,
+        CLAUDE_V3_OPUS
+    )
+
 }

@@ -67,7 +67,7 @@ class ChatService(
     fun anthropicAiChat(
         userInput: String,
         systemMessage: String,
-        model: String? = AiModel.CLAUDE_V1
+        model: String? = AiModel.CLAUDE_V3_SONNET
     ): ChatResponse? {
         logger.debug { "Anthropic 챗 호출 시작 - 모델: $model" }
         try {
