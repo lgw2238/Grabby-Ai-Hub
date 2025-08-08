@@ -61,4 +61,5 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	environment("OPENAI_API_KEY", System.getenv("OPENAI_API_KEY") ?: "default-api-key")
+	environment("ANTHROPIC_API_KEY", System.getenv("ANTHROPIC_API_KEY") ?: "default-api-key")
 }

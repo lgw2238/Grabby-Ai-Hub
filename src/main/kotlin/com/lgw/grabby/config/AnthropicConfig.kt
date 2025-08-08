@@ -21,7 +21,7 @@ class AnthropicConfig {
      */
     @Bean
     fun anthropicApi(): AnthropicApi {
-        logger.debug { "Anthropic API 클라이언트 초기화 key:{$apiKey}"}
+        logger.info { "Anthropic API 클라이언트 초기화"}
         return AnthropicApi(apiKey)
 
     }

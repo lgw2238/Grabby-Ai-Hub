@@ -36,7 +36,7 @@ class ChatService(
         systemMessage: String,
         model: String? = AiModel.GPT_3_5_TURBO
     ): ChatResponse? {
-        logger.debug { "OpenAI 챗 호출 시작 - 모델: $model" }
+        logger.info { "OpenAI 챗 호출 시작 - 모델: $model" }
         try {
             // 메시지 구성
             val messages = listOf(
@@ -69,7 +69,7 @@ class ChatService(
         systemMessage: String,
         model: String? = AiModel.CLAUDE_V3_SONNET
     ): ChatResponse? {
-        logger.debug { "Anthropic 챗 호출 시작 - 모델: $model" }
+        logger.info { "Anthropic 챗 호출 시작 - 모델: $model" }
         try {
             // 메시지 구성
             val messages = listOf(

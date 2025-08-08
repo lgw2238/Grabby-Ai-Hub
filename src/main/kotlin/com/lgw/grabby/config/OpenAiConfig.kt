@@ -21,7 +21,7 @@ class OpenAiConfig {
      */
     @Bean
     fun openAiApi(): OpenAiApi {
-        logger.debug { "OpenAI API 클라이언트 초기화" }
+        logger.info { "OpenAI API 클라이언트 초기화 apiKey" }
         return OpenAiApi.builder()
             .apiKey(apiKey)
             .build()
