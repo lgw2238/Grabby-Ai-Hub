@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 /**
  * 채팅 관련 DTO 클래스들
+ * 추후 파이프라인이 늘어나게 된다면 ... 이곳에 추가할 예정
  */
 
 /**

@@ -16,6 +16,10 @@ import org.springframework.ai.vectorstore.SearchRequest
 /**
  * 문서를 벡터화하여 저장하고, 벡터 유사도 검색을 제공합니다.
  * Spring AI의 SimpleVectorStore(Cosine Similarity)를 활용합니다.
+ *
+ * InMemory인 이유는 현재 해당 데이터를 적재할
+ * bucket이 별도로 없는 상황이기에 InMemory로 구현..
+ * So sad..
  */
 @Repository
 class InMemoryDocumentVectorStore(
@@ -35,7 +39,7 @@ class InMemoryDocumentVectorStore(
      * @param metadata 문서 메타데이터
      */
     fun addDocument(id: String, fileText: String, metadata: Map<String, Any>) {
-        logger.debug { "문서 추가 시작 - ID: $id, 내용 길이: ${fileText.length}" }
+        logger.info { "문서 추가 시작 - ID: $id, 내용 길이: ${fileText.length}" }
 
         try {
             // Spring AI Document 객체 생성
@@ -70,7 +74,7 @@ class InMemoryDocumentVectorStore(
      * @param metadata 문서 메타데이터
      */
     fun addDocumentFile(id: String, file: File, metadata: Map<String, Any>) {
-        logger.debug { "파일 문서 추가 시작 - ID: $id, 파일: ${file.name}" }
+        logger.info { "파일 문서 추가 시작 - ID: $id, 파일: ${file.name}" }
 
         try {
             // 텍스트 추출
@@ -80,7 +84,7 @@ class InMemoryDocumentVectorStore(
                 file.readText()
             }
 
-            logger.debug { "파일 텍스트 추출 완료 - 길이: ${fileText.length}" }
+            logger.info { "파일 텍스트 추출 완료 - 길이: ${fileText.length}" }
             addDocument(id, fileText, metadata)
         } catch (e: Exception) {
             logger.error(e) { "파일 처리 실패 - ID: $id, 파일: ${file.name}" }

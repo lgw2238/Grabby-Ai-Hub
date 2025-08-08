@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.*
 /**
  * Chat API 컨트롤러
  *
- * LLM API를 통해 채팅 기능을 제공합니다.
+ * LLM API를 통해 채팅(Req/Res) 기능을 제공합니다.
+ *
+ * Anthropic AI와 OpenAI API 모두 정책이 변경되어
+ * 무료 크레딧 제공 X -> Card 슥삭 해야합니다.
  */
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -36,7 +39,7 @@ class ChatController(
     )
     @SwaggerResponse(
         responseCode = "200",
-        description = "LLM 응답 성공",
+        description = "LLM RESPONSE SUCCESS",
         content = [Content(schema = Schema(implementation = ApiResponseDto::class))]
     )
     @SwaggerResponse(responseCode = "400", description = "잘못된 요청")
