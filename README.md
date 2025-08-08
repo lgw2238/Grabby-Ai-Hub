@@ -2,9 +2,6 @@
 
 HUB SERVER, which provides a RAG-based inference API.
 
-
-## 프로젝트 스펙 요약
-
 - **Stack:** Kotlin/Spring Ai
   - RAG(Retrieval-Augmented Generation) 기반 인퍼런스 API 제공
   - 다양한 AI 모델 연동 및 추론 지원
