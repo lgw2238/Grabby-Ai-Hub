@@ -1,5 +1,6 @@
 package com.lgw.grabby.domain.dto
 
+import com.lgw.grabby.common.AiModel
 import io.swagger.v3.oas.annotations.media.Schema
 
 /**
@@ -14,6 +15,6 @@ data class ChatRequestDto(
     @Schema(description = "사용자 질문", example = "안녕하세요")
     val query: String,
 
-    @Schema(description = "사용할 LLM 모델", example = "gpt-3.5-turbo", defaultValue = "gpt-3.5-turbo")
-    val model: String = "gpt-3.5-turbo"
+    @Schema(description = "사용할 LLM 모델", example = AiModel.GPT_3_5_TURBO, defaultValue = AiModel.GPT_3_5_TURBO)
+    val model: String? = AiModel.GPT_3_5_TURBO
 )

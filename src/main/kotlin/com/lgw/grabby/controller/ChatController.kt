@@ -61,11 +61,13 @@ class ChatController(
             val systemMessage = "You are a helpful AI assistant."
 
             // AI 응답 생성
-            val response = chatService.openAiChat(
-                userInput = request.query,
-                systemMessage = systemMessage,
-                model = request.model
-            )
+            val response = request.model?.let {
+                chatService.openAiChat(
+                    userInput = request.query,
+                    systemMessage = systemMessage,
+                    model = it
+                )
+            }
             logger.debug { "LLM 응답 생성: $response" }
 
             response?.let { chatResponse ->

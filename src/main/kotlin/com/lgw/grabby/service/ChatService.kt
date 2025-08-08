@@ -1,6 +1,9 @@
 package com.lgw.grabby.service
 
+import com.lgw.grabby.common.AiModel
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.ai.anthropic.api.AnthropicApi
+import org.springframework.ai.anthropic.AnthropicChatModel
 import org.springframework.ai.chat.messages.SystemMessage
 import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatResponse
@@ -15,7 +18,8 @@ import org.springframework.stereotype.Service
  */
 @Service
 class ChatService(
-    private val openAiApi: OpenAiApi
+    private val openAiApi: OpenAiApi,
+    private val anthropicApi: AnthropicApi,
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -30,7 +34,7 @@ class ChatService(
     fun openAiChat(
         userInput: String,
         systemMessage: String,
-        model: String = "gpt-3.5-turbo"
+        model: String? = AiModel.GPT_3_5_TURBO
     ): ChatResponse? {
         logger.debug { "OpenAI 챗 호출 시작 - 모델: $model" }
         try {
@@ -56,6 +60,39 @@ class ChatService(
             return chatModel.call(prompt)
         } catch (e: Exception) {
             logger.error(e) { "OpenAI 챗 호출 중 오류 발생: ${e.message}" }
+            return null
+        }
+    }
+
+    fun anthropicAiChat(
+        userInput: String,
+        systemMessage: String,
+        model: String? = AiModel.CLAUDE_V1
+    ): ChatResponse? {
+        logger.debug { "Anthropic 챗 호출 시작 - 모델: $model" }
+        try {
+            // 메시지 구성
+            val messages = listOf(
+                SystemMessage(systemMessage),
+                UserMessage(userInput)
+            )
+
+            // 챗 옵션 설정
+            val chatOptions = ChatOptions.builder()
+                .model(model)
+                .build()
+
+            // 프롬프트 생성
+            val prompt = Prompt(messages, chatOptions)
+
+            val chatModel = AnthropicChatModel.builder()
+                .anthropicApi(anthropicApi)
+                .build()
+
+            // Anthropic API 호출
+            return chatModel.call(prompt)
+        } catch (e: Exception) {
+            logger.error(e) { "Anthropic 챗 호출 중 오류 발생: ${e.message}" }
             return null
         }
     }
