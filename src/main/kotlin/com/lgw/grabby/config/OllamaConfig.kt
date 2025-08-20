@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Configuration
 class OllamaConfig {
     private val logger = KotlinLogging.logger {}
 
+    @Value("\${spring.ai.ollama.base-url:http://localhost:11434}")
+    private lateinit var ollamaBaseUrl: String
+
     @Bean
-    fun ollamaApi(
-        @Value("\${spring.ai.ollama.base-url:http://localhost:11434}") baseUrl: String
-    ): OllamaApi {
-        logger.info { "Ollama API 클라이언트 초기화, Base URL: $baseUrl" }
-        return OllamaApi(baseUrl)
+    fun ollamaApi(): OllamaApi {
+        logger.info { "Ollama API 클라이언트 초기화, Base URL: $ollamaBaseUrl" }
+        return OllamaApi(ollamaBaseUrl)
     }
 }

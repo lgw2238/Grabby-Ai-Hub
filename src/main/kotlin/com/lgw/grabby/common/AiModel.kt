@@ -4,6 +4,7 @@ object AiModel {
     // OpenAI
     const val GPT_3_5_TURBO = "gpt-3.5-turbo"
     const val GPT_4 = "gpt-4"
+    const val GPT_4_O = "gpt-4o"
     const val GPT_4_TURBO = "gpt-4-turbo"
     const val LLM_MATH = "llm-math"
     const val LLM_CODE_INTERPRETER = "llm-code-interpreter"
@@ -39,6 +40,7 @@ object AiModel {
     val gptModels = listOf(
         GPT_3_5_TURBO,
         GPT_4,
+        GPT_4_O,
         GPT_4_TURBO,
         LLM_MATH,
         LLM_CODE_INTERPRETER,
