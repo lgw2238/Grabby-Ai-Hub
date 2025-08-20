@@ -9,6 +9,8 @@ import org.springframework.ai.chat.messages.UserMessage
 import org.springframework.ai.chat.model.ChatResponse
 import org.springframework.ai.chat.prompt.ChatOptions
 import org.springframework.ai.chat.prompt.Prompt
+import org.springframework.ai.ollama.OllamaChatModel
+import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.openai.api.OpenAiApi
 import org.springframework.stereotype.Service
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service
 class ChatService(
     private val openAiApi: OpenAiApi,
     private val anthropicApi: AnthropicApi,
+    private val ollamaApi: OllamaApi
 ) {
     private val logger = KotlinLogging.logger {}
 
@@ -94,6 +97,36 @@ class ChatService(
         } catch (e: Exception) {
             logger.error(e) { "Anthropic 챗 호출 중 오류 발생: ${e.message}" }
             return null
+        }
+    }
+
+    fun ollamaAiChat(
+        userInput: String,
+        systemMessage: String,
+        model: String? = AiModel.LLAMA3
+    ): ChatResponse? {
+        logger.info { "Ollama 챗 호출 시작 - 모델: $model" }
+        return try {
+            val messages = listOf(
+                SystemMessage(systemMessage),
+                UserMessage(userInput)
+            )
+
+            val chatOptions = ChatOptions.builder()
+                .model(model)
+                .temperature(0.2)
+                .build()
+
+            val prompt = Prompt(messages, chatOptions)
+
+            val chatModel = OllamaChatModel.builder()
+                .ollamaApi(ollamaApi)
+                .build()
+
+            chatModel.call(prompt)
+        } catch (e: Exception) {
+            logger.error(e) { "Ollama 챗 호출 중 오류 발생: ${e.message}" }
+            null
         }
     }
 }

@@ -64,7 +64,7 @@ class RagController(private val ragService: RagService) {
         // File 객체 생성
         val tempFile = try {
             File.createTempFile("upload_", ".pdf").also {
-                logger.debug { "임시 파일 생성됨: ${it.absolutePath}" }
+                logger.info { "임시 파일 생성됨: ${it.absolutePath}" }
                 file.transferTo(it)
             }
         } catch (e: IOException) {
@@ -96,7 +96,7 @@ class RagController(private val ragService: RagService) {
         } finally {
             if (tempFile.exists()) {
                 tempFile.delete()
-                logger.debug { "임시 파일 삭제됨: ${tempFile.absolutePath}" }
+                logger.info { "임시 파일 삭제됨: ${tempFile.absolutePath}" }
             }
         }
     }

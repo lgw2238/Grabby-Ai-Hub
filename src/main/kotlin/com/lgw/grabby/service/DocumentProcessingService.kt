@@ -24,15 +24,15 @@ class DocumentProcessingService {
      * @throws DocumentProcessingException 텍스트 추출 실패 시
      */
     fun extractTextFromPdf(pdfFile: File): String {
-        logger.debug { "PDF 텍스트 추출 시작: ${pdfFile.name}" }
+        logger.info { "PDF 텍스트 추출 시작: ${pdfFile.name}" }
 
         return try {
             // Apache PDFBox를 사용하여 PDF에서 텍스트 추출
             PDDocument.load(pdfFile).use { document ->
-                logger.debug { "PDF 문서 로드 성공: ${document.numberOfPages}페이지" }
+                logger.info { "PDF 문서 로드 성공: ${document.numberOfPages}페이지" }
                 PDFTextStripper().getText(document)
             }.also {
-                logger.debug { "PDF 텍스트 추출 완료: ${it.length} 문자" }
+                logger.info { "PDF 텍스트 추출 완료: ${it.length} 문자" }
             }
         } catch (e: IOException) {
             logger.error(e) { "PDF 텍스트 추출 실패" }

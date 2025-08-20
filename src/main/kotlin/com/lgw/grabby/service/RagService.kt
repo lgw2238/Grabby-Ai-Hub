@@ -57,7 +57,7 @@ class RagService(
      * @return 유사도 순으로 정렬된 문서 목록
      */
     fun retrieve(question: String, maxResults: Int): List<DocumentSearchResultDto> {
-        logger.debug { "검색 시작: '$question', 최대 결과 수: $maxResults" }
+        logger.info { "검색 시작: '$question', 최대 결과 수: $maxResults" }
         return vectorStore.similaritySearch(question, maxResults)
     }
 
@@ -105,7 +105,7 @@ class RagService(
         // LLM을 통한 응답 생성
         try {
             val response = chatService.openAiChat(question, systemPromptText, model)
-            logger.debug { "AI 응답 생성: ${response}" }
+            logger.info { "AI 응답 생성: ${response}" }
             val aiAnswer = response?.result?.output?.text ?: "응답을 생성할 수 없습니다."
 
             // 참고 문서 정보 추가

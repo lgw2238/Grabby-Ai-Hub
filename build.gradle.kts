@@ -30,6 +30,7 @@ dependencies {
 	// Spring AI 의존성
 	implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
 	implementation("org.springframework.ai:spring-ai-anthropic-spring-boot-starter")
+	implementation("org.springframework.ai:spring-ai-ollama")
 
 	// PDF 처리 라이브러리
 	implementation("org.apache.pdfbox:pdfbox:2.0.27")
