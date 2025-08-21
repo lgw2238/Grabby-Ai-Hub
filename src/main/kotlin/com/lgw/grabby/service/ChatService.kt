@@ -2,6 +2,7 @@ package com.lgw.grabby.service
 
 import com.lgw.grabby.common.AiModel
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.micrometer.core.instrument.MeterRegistry
 import org.springframework.ai.anthropic.api.AnthropicApi
 import org.springframework.ai.anthropic.AnthropicChatModel
 import org.springframework.ai.chat.messages.SystemMessage
@@ -14,17 +15,21 @@ import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.openai.OpenAiChatModel
 import org.springframework.ai.openai.api.OpenAiApi
 import org.springframework.stereotype.Service
+import io.micrometer.core.instrument.Tag
+import io.micrometer.core.instrument.Timer
 
 /**
  * OpenAI API를 사용하여 질의응답을 수행하는 서비스
  */
 @Service
 class ChatService(
+    private val meterRegistry: MeterRegistry,
     private val openAiApi: OpenAiApi,
     private val anthropicApi: AnthropicApi,
     private val ollamaApi: OllamaApi
 ) {
     private val logger = KotlinLogging.logger {}
+    val timerSample = Timer.start(meterRegistry)
 
     /**
      * OpenAI 챗 API를 이용하여 응답을 생성합니다.
@@ -40,6 +45,7 @@ class ChatService(
         model: String? = AiModel.GPT_3_5_TURBO
     ): ChatResponse? {
         logger.info { "OpenAI 챗 호출 시작 - 모델: $model" }
+        val tags = listOf(model?.let { Tag.of("model", it) })
         try {
             // 메시지 구성
             val messages = listOf(
@@ -60,8 +66,30 @@ class ChatService(
                 .openAiApi(openAiApi)
                 .build()
 
-            return chatModel.call(prompt)
+            val response = chatModel.call(prompt)
+
+            // 타이머 완료(성공)
+            timerSample.stop(Timer.builder("ai.chat.request")
+                .description("OpenAI chat latency")
+                .tags(tags + Tag.of("status", "success"))
+                .register(meterRegistry))
+
+            // 성공 카운터
+            meterRegistry.counter("ai.chat.count", tags + Tag.of("status", "success")).increment()
+            return response
         } catch (e: Exception) {
+            // 타이머 완료(실패)
+            timerSample.stop(Timer.builder("ai.chat.request")
+                .description("OpenAI chat latency")
+                .tags((tags + Tag.of("status", "error")).toString(),
+                    Tag.of("error_type", e.javaClass.simpleName).toString()
+                )
+                .register(meterRegistry))
+
+            // 실패 카운터
+            meterRegistry.counter("ai.chat.count", (tags + Tag.of("status", "error")).toString(),
+                Tag.of("error_type", e.javaClass.simpleName).toString()
+            ).increment()
             logger.error(e) { "OpenAI 챗 호출 중 오류 발생: ${e.message}" }
             return null
         }

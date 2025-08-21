@@ -41,6 +41,13 @@ dependencies {
 	// 로깅 라이브러리
 	implementation("io.github.oshai:kotlin-logging:6.0.3")
 
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-registry-prometheus")
+
+	// 선택: 분산 트레이싱(OTel 브리지 + OTLP 익스포터)
+	implementation("io.micrometer:micrometer-tracing-bridge-otel")
+	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
+
 	// 테스트 의존성
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

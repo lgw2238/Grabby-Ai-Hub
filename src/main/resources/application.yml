@@ -1,0 +1,44 @@
+  spring:
+    application:
+      name: grabby-ai
+    ai:
+      openai:
+        api-key: ${OPENAI_API_KEY}
+        embedding:
+          options:
+            model: text-embedding-3-small
+      anthropic:
+        api-key: ${ANTHROPIC_API_KEY}
+      ollama:
+        base-url: http://localhost:11434
+        chat:
+          options:
+            model: llama3
+    servlet:
+      multipart:
+        max-file-size: 20MB
+        max-request-size: 20MB
+    server:
+      port: 8080
+    springdoc:
+      api-docs:
+        path: /api-docs
+    profiles:
+      default: local
+      active: ${SPRING_PROFILES_ACTIVE:${ENV:local}}
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,prometheus
+    endpoint:
+      health:
+        show-details: when_authorized
+    metrics:
+      tags:
+        application: grabby-ai
+        env: ${ENV:${spring.profiles.active:local}}
+    tracing:
+      sampling:
+        probability: 1.0

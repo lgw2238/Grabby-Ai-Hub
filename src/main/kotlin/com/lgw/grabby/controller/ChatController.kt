@@ -5,6 +5,7 @@ import com.lgw.grabby.domain.dto.ApiResponseDto
 import com.lgw.grabby.domain.dto.ChatRequestDto
 import com.lgw.grabby.service.ChatService
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.micrometer.core.annotation.Timed
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -45,6 +46,7 @@ class ChatController(
     )
     @SwaggerResponse(responseCode = "400", description = "잘못된 요청")
     @SwaggerResponse(responseCode = "500", description = "서버 오류")
+    @Timed(value = "http.chat.request", percentiles = [0.5, 0.95, 0.99])
     @PostMapping("/query")
     fun sendMessage(
         @Parameter(description = "채팅 요청 객체", required = true)
