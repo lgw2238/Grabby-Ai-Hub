@@ -51,3 +51,6 @@ out/
 *.zip
 .DS_Store
 .env
+
+# chunks ignore
+/src/main/resources/data/
