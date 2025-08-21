@@ -5,11 +5,13 @@ import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 
 /**
  * Ollama API 설정
  */
 @Configuration
+@Profile("local")
 class OllamaConfig {
     private val logger = KotlinLogging.logger {}
 
