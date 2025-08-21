@@ -26,7 +26,17 @@
     profiles:
       default: local
       active: ${SPRING_PROFILES_ACTIVE:${ENV:local}}
-
+    mail:
+      host: smtp.example.com
+      port: 587
+      username: ${MAIL_USERNAME:}
+      password: ${MAIL_PASSWORD:}
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
   management:
     endpoints:
       web:
@@ -42,3 +52,17 @@
     tracing:
       sampling:
         probability: 1.0
+
+        health:
+          check:
+            interval-ms: 300000   # 5분
+            notify-on-success: false
+
+        notification:
+          email:
+            enabled: false
+            from: no-reply@example.com
+            to: you@example.com
+          kakao:
+            enabled: true
+            access-token: ${KAKAO_ACCESS_TOKEN:} # 사용자 액세스 토큰(talk_memo 스코프)

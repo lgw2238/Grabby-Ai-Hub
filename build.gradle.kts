@@ -25,9 +25,16 @@ configurations.all {
 	exclude(group = "commons-logging", module = "commons-logging")
 }
 
+val osxClassifier = when (System.getProperty("os.arch")) {
+	"aarch64", "arm64" -> "osx-aarch_64"
+	else -> "osx-x86_64"
+}
+// 프로젝트가 사용하는 Netty 버전에 맞게 설정 (예: 4.1.111.Final)
+val nettyVersion = "4.1.119.Final"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
+	implementation("io.netty:netty-resolver-dns-native-macos:$nettyVersion:$osxClassifier")
 	// Kotlin 지원
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -53,6 +60,9 @@ dependencies {
 	implementation("io.micrometer:micrometer-tracing-bridge-otel")
 	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
 
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation("org.springframework.boot:spring-boot-starter-webflux") // Kakao API 호출(WebClient)
+
 	// 테스트 의존성
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -73,6 +83,21 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-	environment("OPENAI_API_KEY", System.getenv("OPENAI_API_KEY") ?: "default-api-key")
-	environment("ANTHROPIC_API_KEY", System.getenv("ANTHROPIC_API_KEY") ?: "default-api-key")
+	systemProperty(
+		"spring.profiles.active",
+		// 우선순위: -Dspring.profiles.active > SPRING_PROFILES_ACTIVE > 기본 local
+		(project.findProperty("spring.profiles.active") as String?)
+			?: System.getenv("SPRING_PROFILES_ACTIVE")
+			?: "local"
+	)
+	environment("OPENAI_API_KEY", System.getenv("OPENAI_API_KEY") ?: "real-api-key")
+	environment("ANTHROPIC_API_KEY", System.getenv("ANTHROPIC_API_KEY") ?: "real-api-key")
+	environment("KAKAO_ACCESS_TOKEN", System.getenv("KAKAO_ACCESS_TOKEN") ?: "real-api-key")
+}
+
+tasks.test {
+	systemProperty(
+		"spring.profiles.active",
+		System.getenv("SPRING_PROFILES_ACTIVE") ?: "test"
+	)
 }

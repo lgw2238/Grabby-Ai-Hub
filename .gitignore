@@ -51,6 +51,6 @@ out/
 *.zip
 .DS_Store
 .env
-
+*.yml
 # chunks ignore
 /src/main/resources/data/
