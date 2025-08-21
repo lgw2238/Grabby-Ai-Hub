@@ -20,6 +20,11 @@ repositories {
 
 extra["springAiVersion"] = "1.0.0-M6"
 
+// 전역적으로 commons-logging 제외
+configurations.all {
+	exclude(group = "commons-logging", module = "commons-logging")
+}
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 
