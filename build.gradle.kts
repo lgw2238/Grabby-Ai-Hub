@@ -35,6 +35,10 @@ val nettyVersion = "4.1.119.Final"
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("io.netty:netty-resolver-dns-native-macos:$nettyVersion:$osxClassifier")
+	implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+	// AOP 지원
+	implementation("org.springframework.boot:spring-boot-starter-aop")
+
 	// Kotlin 지원
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
